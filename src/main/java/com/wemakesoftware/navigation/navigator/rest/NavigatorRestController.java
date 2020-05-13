@@ -43,7 +43,7 @@ public class NavigatorRestController {
             mobileStationResponseDTO = navigatorService.findMobileStation(UUID.fromString(uuid));
             return new ResponseEntity<>(mobileStationResponseDTO, HttpStatus.OK);
         } catch (MobileNotFoundException e) {
-            mobileStationResponseDTO.setError_code(HttpStatus.NOT_FOUND.value());
+            mobileStationResponseDTO.setErrorCode(HttpStatus.NOT_FOUND.value());
             return new ResponseEntity<>(mobileStationResponseDTO, HttpStatus.NOT_FOUND);
         }
     }

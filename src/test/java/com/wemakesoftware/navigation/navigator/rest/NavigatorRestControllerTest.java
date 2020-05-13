@@ -160,7 +160,7 @@ public class NavigatorRestControllerTest {
 
         Assert.assertNotNull(result);
         Assert.assertEquals(404, result.getResponse().getStatus());
-        Assert.assertEquals(Integer.valueOf("404"), mobileStationResponse.getError_code());
+        Assert.assertEquals(Integer.valueOf("404"), mobileStationResponse.getErrorCode());
     }
 
 }
