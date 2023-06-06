@@ -63,7 +63,7 @@ public class NavigatorRestControllerTest {
     public void testMobileStationReporting() {
         baseStationRepository.findAll().forEach(baseStation -> {
             log.info("Base: {}", baseStation);
-            Report reportDTO = new Report();
+            Report report = new Report();
             List<MobileStationMessage> reports = new ArrayList<>();
             mobileStationRepository.findAll().forEach(mobileStation -> {
                 MobileStationMessage mobileStationMessage = new MobileStationMessage();
@@ -87,12 +87,12 @@ public class NavigatorRestControllerTest {
                 }
 
             });
-            reportDTO.setBaseStationId(baseStation.getId());
-            reportDTO.setReports(reports);
-            log.info("Report: {} Base: {}", reportDTO, baseStation);
+            report.setBaseStationId(baseStation.getId());
+            report.setReports(reports);
+            log.info("Report: {} Base: {}", report, baseStation);
 
             try {
-                String jsonRequest = mapper.writeValueAsString(reportDTO);
+                String jsonRequest = mapper.writeValueAsString(report);
                 MvcResult result = mockMvc.perform(
                         post("http://localhost:8080/api/navigation/report/create")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -112,9 +112,9 @@ public class NavigatorRestControllerTest {
     @SneakyThrows
     @Test
     public void testMobileStationReportingBaseNotFound() {
-        Report reportDTO = new Report();
-        reportDTO.setBaseStationId(UUID.randomUUID());
-        String jsonRequest = mapper.writeValueAsString(reportDTO);
+        Report report = new Report();
+        report.setBaseStationId(UUID.randomUUID());
+        String jsonRequest = mapper.writeValueAsString(report);
         MvcResult result = mockMvc.perform(
                 post("http://localhost:8080/api/navigation/report/create")
                         .contentType(MediaType.APPLICATION_JSON)
