@@ -2,8 +2,8 @@ package com.wemakesoftware.navigation.navigator.rest;
 
 import com.wemakesoftware.navigation.common.application.exception.BaseNotFoundException;
 import com.wemakesoftware.navigation.common.application.exception.MobileNotFoundException;
-import com.wemakesoftware.navigation.navigator.application.dto.MobileStationResponseDTO;
-import com.wemakesoftware.navigation.navigator.application.dto.ReportDTO;
+import com.wemakesoftware.navigation.navigator.application.dto.MobileStationResponse;
+import com.wemakesoftware.navigation.navigator.application.dto.Report;
 import com.wemakesoftware.navigation.navigator.application.service.NavigatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +27,9 @@ public class NavigatorRestController {
     }
 
     @PostMapping("/report/create")
-    public ResponseEntity<?> create(@RequestBody ReportDTO reportDTO) {
+    public ResponseEntity<?> create(@RequestBody Report report) {
         try {
-            return new ResponseEntity<>(navigatorService.report(reportDTO), HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(navigatorService.report(report), HttpStatus.ACCEPTED);
         } catch (BaseNotFoundException e) {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, e.getMessage(), e);
@@ -38,13 +38,13 @@ public class NavigatorRestController {
 
     @GetMapping("/location/{uuid}")
     public ResponseEntity<?> getPayment(@PathVariable String uuid) {
-        MobileStationResponseDTO mobileStationResponseDTO = new MobileStationResponseDTO();
+        MobileStationResponse mobileStationResponse = new MobileStationResponse();
         try {
-            mobileStationResponseDTO = navigatorService.findMobileStation(UUID.fromString(uuid));
-            return new ResponseEntity<>(mobileStationResponseDTO, HttpStatus.OK);
+            mobileStationResponse = navigatorService.findMobileStation(UUID.fromString(uuid));
+            return new ResponseEntity<>(mobileStationResponse, HttpStatus.OK);
         } catch (MobileNotFoundException e) {
-            mobileStationResponseDTO.setErrorCode(HttpStatus.NOT_FOUND.value());
-            return new ResponseEntity<>(mobileStationResponseDTO, HttpStatus.NOT_FOUND);
+            mobileStationResponse.setErrorCode(HttpStatus.NOT_FOUND.value());
+            return new ResponseEntity<>(mobileStationResponse, HttpStatus.NOT_FOUND);
         }
     }
 

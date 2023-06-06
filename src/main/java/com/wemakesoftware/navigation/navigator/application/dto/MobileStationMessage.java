@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class MobileStationMessageDTO {
+public class MobileStationMessage {
 
     private UUID mobileStationId;
 

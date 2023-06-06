@@ -3,9 +3,9 @@ package com.wemakesoftware.navigation.navigator.rest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wemakesoftware.navigation.NavigationApplication;
-import com.wemakesoftware.navigation.navigator.application.dto.MobileStationMessageDTO;
-import com.wemakesoftware.navigation.navigator.application.dto.MobileStationResponseDTO;
-import com.wemakesoftware.navigation.navigator.application.dto.ReportDTO;
+import com.wemakesoftware.navigation.navigator.application.dto.MobileStationMessage;
+import com.wemakesoftware.navigation.navigator.application.dto.MobileStationResponse;
+import com.wemakesoftware.navigation.navigator.application.dto.Report;
 import com.wemakesoftware.navigation.navigator.application.service.NavigatorService;
 import com.wemakesoftware.navigation.navigator.domain.repository.BaseStationRepository;
 import com.wemakesoftware.navigation.navigator.domain.repository.MobileStationRepository;
@@ -63,10 +63,10 @@ public class NavigatorRestControllerTest {
     public void testMobileStationReporting() {
         baseStationRepository.findAll().forEach(baseStation -> {
             log.info("Base: {}", baseStation);
-            ReportDTO reportDTO = new ReportDTO();
-            List<MobileStationMessageDTO> reports = new ArrayList<>();
+            Report reportDTO = new Report();
+            List<MobileStationMessage> reports = new ArrayList<>();
             mobileStationRepository.findAll().forEach(mobileStation -> {
-                MobileStationMessageDTO mobileStationMessageDTO = new MobileStationMessageDTO();
+                MobileStationMessage mobileStationMessage = new MobileStationMessage();
                 boolean isInRadius = navigatorService.isWithinRadius(baseStation.getLocation().getX(),
                         baseStation.getLocation().getY(),
                         baseStation.getDetectionRadiusInMeters(),
@@ -79,10 +79,10 @@ public class NavigatorRestControllerTest {
                             baseStation.getLocation().getY(),
                             mobileStation.getLastKnownLocation().getX(),
                             mobileStation.getLastKnownLocation().getY());
-                    mobileStationMessageDTO.setDistance(distance);
-                    mobileStationMessageDTO.setTimestamp(LocalDateTime.now());
-                    mobileStationMessageDTO.setMobileStationId(mobileStation.getId());
-                    reports.add(mobileStationMessageDTO);
+                    mobileStationMessage.setDistance(distance);
+                    mobileStationMessage.setTimestamp(LocalDateTime.now());
+                    mobileStationMessage.setMobileStationId(mobileStation.getId());
+                    reports.add(mobileStationMessage);
                     log.info("Mobile station: {} distance: {}", mobileStation, distance);
                 }
 
@@ -112,7 +112,7 @@ public class NavigatorRestControllerTest {
     @SneakyThrows
     @Test
     public void testMobileStationReportingBaseNotFound() {
-        ReportDTO reportDTO = new ReportDTO();
+        Report reportDTO = new Report();
         reportDTO.setBaseStationId(UUID.randomUUID());
         String jsonRequest = mapper.writeValueAsString(reportDTO);
         MvcResult result = mockMvc.perform(
@@ -136,8 +136,8 @@ public class NavigatorRestControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        MobileStationResponseDTO mobileStationResponse =
-                mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<MobileStationResponseDTO>() {
+        MobileStationResponse mobileStationResponse =
+                mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<MobileStationResponse>() {
                 });
 
         Assert.assertNotNull(result);
@@ -154,8 +154,8 @@ public class NavigatorRestControllerTest {
                 .andExpect(status().isNotFound())
                 .andReturn();
 
-        MobileStationResponseDTO mobileStationResponse =
-                mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<MobileStationResponseDTO>() {
+        MobileStationResponse mobileStationResponse =
+                mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<MobileStationResponse>() {
                 });
 
         Assert.assertNotNull(result);
